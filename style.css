@@ -1,0 +1,114 @@
+body {
+  font-family: 'Courier New', Courier, monospace;
+  margin: 0;
+  padding: 0;
+  background-image: url('niuka.jpg'); /* Imagen de fondo */
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+}
+
+header {
+  background: rgba(0, 0, 0, 0.6); /* Fondo oscuro y transparente para el header */
+  color: #fff;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 0 10px #ff0057;
+}
+
+header h1 {
+  font-size: 4rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #ff00ff;
+}
+
+header img {
+  width: 50%;
+  margin-bottom: 1rem;
+}
+
+.menu {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding: 0;
+  margin: 0;
+}
+
+.menu a {
+  color: #f5f5f5;
+  text-decoration: none;
+  font-weight: bold;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.menu a:hover {
+  color: #ff00ff;
+  border-bottom: 2px solid #ff00ff;
+}
+
+main {
+  background: rgba(0, 0, 0, 0.6); /* Fondo oscuro y transparente para el main */
+  margin: 2rem;
+  padding: 2rem;
+  border: 2px dashed #ff00ff;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #ff00ff;
+  text-align: center;
+}
+
+h2 {
+  font-size: 2rem;
+  color: #ff00ff;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.6);
+  color: #ff00ff;
+  font-weight: bold;
+  border-top: 2px solid #ff00ff;
+}
+
+footer p {
+  margin: 0;
+}
+
+img {
+  width: 50%;
+
+  border-radius: 10px;
+  box-shadow: 0 0 10px #ff00ff;
+}
+
+.punk-title {
+  width: 50%;
+
+  font-family: 'Impact', sans-serif; /* Tipografía atrevida */
+  font-size: 5rem; /* Título grande */
+  color: #00FF00; /* Color verde brillante */
+  text-shadow: 3px 3px 0 #000, -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000; /* Sombras fuertes para un estilo más punk */
+  text-transform: uppercase; /* Texto en mayúsculas */
+  letter-spacing: 5px; /* Espaciado entre letras */
+  border: 3px solid #00FF00; /* Borde verde */
+  padding: 10px 20px; /* Espaciado dentro del borde */
+  background-color: #000; /* Fondo negro */
+  display: inline-block; /* Para que no ocupe todo el ancho */
+  position: relative;
+}
+
+.punk-title::after {
+  width: 50%;
+
+  content: "!!!"; /* Añade un detalle extra */
+  color: #FF0000; /* Color rojo para resaltar */
+  position: absolute;
+  bottom: -10px;
+  right: 10px;
+  font-size: 2rem;
+  font-weight: bold;
+}

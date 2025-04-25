@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Viborita Viborona</title>
+  <link rel="stylesheet" href="juego.css" />
+</head>
+<body>
+
+  <!-- Selector de jugador -->
+  <div id="playerSelect">
+    <label for="players">Jugador:</label>
+    <select id="players"></select>
+    <button onclick="addPlayer()">+ Nuevo Jugador</button>
+  </div>
+
+  <!-- Ranking -->
+  <div id="highscores">
+    <h2>Ranking</h2>
+    <table>
+      <thead>
+        <tr><th>Nombre</th><th>Puntaje</th></tr>
+      </thead>
+      <tbody id="scoreList"></tbody>
+    </table>
+  </div>
+
+  <!-- Juego -->
+  <div class="container-game">
+    <div id="menu">
+      <h1>🐍 Viborita Viborona</h1>
+      <p>Selecciona nivel:</p>
+      <button onclick="startGame(8)">Fácil</button>
+      <button onclick="startGame(12)">Normal</button>
+      <button onclick="startGame(18)">Demente</button>
+    </div>
+
+    <div id="score">Puntaje: 0</div>
+    <canvas id="game" width="600" height="600"></canvas>
+
+    <div id="gameOver">
+      <h2>💀 Game Over</h2>
+      <p>Puntaje final: <span id="finalScore"></span></p>
+      <p>Presiona Enter para reiniciar</p>
+      <button><a href="index.html">REGRESAR</a></button>
+    </div>
+  </div>
+
+  <!-- Controles táctiles -->
+  <div id="mobileControls">
+    <button ontouchstart="setDirection('UP')">⬆️</button><br>
+    <button ontouchstart="setDirection('LEFT')">⬅️</button>
+    <button ontouchstart="setDirection('DOWN')">⬇️</button>
+    <button ontouchstart="setDirection('RIGHT')">➡️</button>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+    const box = 30;
+    let snake, food, direction, score, speed, frame, lastTime;
+
+    let players = [], currentPlayer = null;
+
+    const playersSelect = document.getElementById('players');
+    const scoreList     = document.getElementById('scoreList');
+    const scoreDisplay  = document.getElementById('score');
+    const menu          = document.getElementById('menu');
+    const gameOverScreen= document.getElementById('gameOver');
+    const finalScore    = document.getElementById('finalScore');
+
+    window.onload = updatePlayerList;
+
+    function addPlayer() {
+      const name = prompt('Nombre del nuevo jugador:');
+      if (!name) return;
+      players.push({ name, highscores: [] });
+      currentPlayer = players[players.length - 1];
+      updatePlayerList();
+      renderHighscores();
+    }
+
+    function updatePlayerList() {
+      playersSelect.innerHTML = players.map((p,i)=>
+        `<option value="${i}" ${p===currentPlayer?'selected':''}>${p.name}</option>`
+      ).join('');
+      if (!currentPlayer && players.length) {
+        currentPlayer = players[0];
+        playersSelect.value = 0;
+      }
+    }
+
+    playersSelect.addEventListener('change', e => {
+      currentPlayer = players[e.target.value];
+      renderHighscores(); 
+    });
+
+    function renderHighscores(newScore = null) {
+      if (!currentPlayer) return;
+      if (newScore !== null) {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${currentPlayer.name}</td><td>${newScore}</td>`;
+        scoreList.appendChild(row);
+      } else {
+        scoreList.innerHTML = '';
+        currentPlayer.highscores.forEach(s => {
+          const row = document.createElement('tr');
+          row.innerHTML = `<td>${currentPlayer.name}</td><td>${s}</td>`;
+          scoreList.appendChild(row);
+        });
+      }
+    }
+
+    document.addEventListener('keydown', e => {
+      if (gameOverScreen.style.display==='block' && e.key==='Enter') {
+        startGame(speed); return;
+      }
+      const key=e.key.toLowerCase();
+      if ((key==='arrowup'||key==='w')&&direction!=='DOWN')     direction='UP';
+      if ((key==='arrowdown'||key==='s')&&direction!=='UP')     direction='DOWN';
+      if ((key==='arrowleft'||key==='a')&&direction!=='RIGHT')  direction='LEFT';
+      if ((key==='arrowright'||key==='d')&&direction!=='LEFT')  direction='RIGHT';
+    });
+
+    function setDirection(dir) {
+      if(dir === 'UP' && direction !== 'DOWN') direction = 'UP';
+      if(dir === 'DOWN' && direction !== 'UP') direction = 'DOWN';
+      if(dir === 'LEFT' && direction !== 'RIGHT') direction = 'LEFT';
+      if(dir === 'RIGHT' && direction !== 'LEFT') direction = 'RIGHT';
+    }
+
+    function draw(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      snake.forEach((seg,i)=>{
+        ctx.fillStyle = i===0?'#00ffcc':'#008866';
+        ctx.fillRect(seg.x,seg.y,box,box);
+      });
+      ctx.fillStyle='#ff00ff';
+      ctx.fillRect(food.x,food.y,box,box);
+    }
+
+    function update(){
+      if(!direction) return;
+      const head={...snake[0]};
+      if(direction==='UP') head.y-=box;
+      if(direction==='DOWN') head.y+=box;
+      if(direction==='LEFT') head.x-=box;
+      if(direction==='RIGHT') head.x+=box;
+      if(head.x<0||head.x>=canvas.width||head.y<0||head.y>=canvas.height||
+         snake.some(seg=>seg.x===head.x&&seg.y===head.y)){
+        finalScore.textContent=score;
+        if(!currentPlayer.highscores.includes(score)){
+          currentPlayer.highscores.push(score);
+          renderHighscores(score);
+        }
+        canvas.style.display='none';
+        scoreDisplay.style.display='none';
+        gameOverScreen.style.display='block';
+        cancelAnimationFrame(frame);
+        return;
+      }
+      snake.unshift(head);
+      if(head.x===food.x&&head.y===food.y){
+        score++;
+        scoreDisplay.textContent=`Puntaje: ${score}`;
+        food={x:Math.floor(Math.random()*(canvas.width/box))*box,
+              y:Math.floor(Math.random()*(canvas.height/box))*box};
+      } else snake.pop();
+    }
+
+    function loop(ts){
+      if(!lastTime) lastTime=ts;
+      if(ts-lastTime>1000/speed){
+        update(); draw(); lastTime=ts;
+      }
+      frame=requestAnimationFrame(loop);
+    }
+
+    function startGame(vel){
+      if(!currentPlayer){ alert('Selecciona jugador'); return;}
+      speed=vel;
+      menu.style.display='none';
+      gameOverScreen.style.display='none';
+      canvas.style.display='block';
+      scoreDisplay.style.display='block';
+      direction=null; score=0;
+      scoreDisplay.textContent='Puntaje: 0';
+      snake=[{x:5*box,y:5*box}];
+      food={x:Math.floor(Math.random()*(canvas.width/box))*box,
+            y:Math.floor(Math.random()*(canvas.height/box))*box};
+      lastTime=0;
+      cancelAnimationFrame(frame);
+      frame=requestAnimationFrame(loop);
+    }
+
+    function resetMenu(){
+      gameOverScreen.style.display='none';
+      menu.style.display='block';
+    }
+  </script>
+</body>
+</html>

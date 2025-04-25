@@ -1,0 +1,93 @@
+
+    body {
+      background: linear-gradient(45deg, #0a0a0a, #1a1a1a);
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #fff;
+      font-family: monospace;
+      padding: 20px;
+    }
+    #playerSelect {
+      margin-bottom: 20px;
+    }
+    #playerSelect label,
+    #playerSelect select,
+    #playerSelect button {
+      margin-right: 8px;
+    }
+    #highscores {
+      width: 300px;
+      border: 2px solid #00ffde;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    #highscores h2 {
+      text-align: center;
+      margin-top: 0;
+    }
+    #highscores table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    #highscores th,
+    #highscores td {
+      border: 1px solid #00ffde;
+      padding: 6px;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+    .container-game {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #menu, #gameOver { text-align: center; }
+    canvas {
+      background: #111;
+      border: 3px solid #0ff;
+      display: none;
+      margin-bottom: 10px;
+    }
+    #score {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+      display: none;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background: #00ffde;
+      color: #000;
+    }
+    #mobileControls {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 99;
+      text-align: center;
+      display: none;
+    }
+
+    #mobileControls button {
+      font-size: 2rem;
+      margin: 5px;
+      padding: 10px 20px;
+      border-radius: 12px;
+      background-color: #444;
+      color: white;
+      border: none;
+    }
+
+    @media (max-width: 768px) {
+      #mobileControls {
+        display: block;
+      }
+    }
